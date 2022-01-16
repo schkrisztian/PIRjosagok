@@ -1,0 +1,204 @@
+A51 MACRO ASSEMBLER  STARTUP                                                              10/28/2021 22:04:15 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\STARTUP.obj
+ASSEMBLER INVOKED BY: C:\PIR\Keil_v5\C51\BIN\A51.EXE STARTUP.A51 SET(SMALL) DEBUG PRINT(.\Listings\STARTUP.lst) OBJECT(.
+                      \Objects\STARTUP.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1             
+                       2     
+                       3     
+                       4     
+                       5     
+                       6     
+                       7     
+                       8     
+                       9     
+                      10     
+----                  11             CSEG    AT      0000H
+0000 020030           12             LJMP    0030H
+                      13             
+----                  14             CSEG    AT      000BH
+000B 02004B           15             LJMP    ISR_TIMER0_OVERFLOW
+                      16             
+----                  17             CSEG    AT      0030H
+                      18             
+0030 120061           19             LCALL   S_INIT_INTERUP
+0033 120066           20             LCALL   S_INIT_TIMER0_200U
+                      21             
+0036 75A000           22             MOV     P2,#00H
+                      23     
+0039                  24     MAIN_LOOP:
+                      25             
+                      26             
+0039 208C09           27             JB     TR0,TIMER_RUN
+003C 120074           28             LCALL   CONVERT_BCD
+                      29             
+003F 8880             30             MOV     P0,R0
+0041 D28C             31             setb    tr0
+0043 D2A7             32             SETB    P2.7
+                      33             
+0045                  34     TIMER_RUN:   
+                      35     
+                      36             
+                      37             
+                      38             
+0045 020039           39             LJMP    MAIN_LOOP
+                      40             
+0048                  41     END_OF_PROGRAM:
+0048 020048           42             LJMP    END_OF_PROGRAM
+                      43             
+004B                  44     ISR_TIMER0_OVERFLOW:
+004B DD13             45             DJNZ    R5,ISR_TIMER0_OVERFLOW_END
+004D 7DFA             46             MOV     R5,#0FAH
+004F DE0F             47             DJNZ    R6,ISR_TIMER0_OVERFLOW_END
+0051 7E14             48             MOV     R6,#14H
+0053 DA09             49             DJNZ    R2,ISR_TIMER0_OVERFLOW_END2
+0055 7A09             50             mov     r2,#9
+0057 DB05             51             DJNZ    R3,ISR_TIMER0_OVERFLOW_END2
+                      52             
+                      53             
+                      54             
+0059 758000           55             mov     p0,#00h
+005C C28C             56             clr     tr0
+005E                  57     ISR_TIMER0_OVERFLOW_END2:
+A51 MACRO ASSEMBLER  STARTUP                                                              10/28/2021 22:04:15 PAGE     2
+
+                      58     
+                      59             ;LCALL   S_CONVERT_BIN_BCD
+005E 8A80             60             MOV     P0,r2
+0060                  61     ISR_TIMER0_OVERFLOW_END:
+0060 32               62             RETI
+                      63             
+0061                  64     S_INIT_INTERUP:
+0061 D2AF             65             SETB    EA
+0063 D2A9             66             SETB    ET0
+0065 22               67             RET
+                      68             
+0066                  69     S_INIT_TIMER0_200U:
+                      70             
+0066 53890F           71             ANL     TMOD,#0FH
+0069 438902           72             ORL     TMOD,#02H
+                      73             
+006C 758C38           74             MOV     TH0,#38H
+                      75             ;250X20 -> 
+                      76             
+                      77             ; 1SEC ALAP
+006F 7DFA             78             MOV     R5,#0FAH
+0071 7E20             79             MOV     R6,#20H
+                      80             
+0073 22               81             RET
+                      82             
+                      83             
+0074                  84     CONVERT_BCD:
+0074 A990             85             MOV     R1,P1
+                      86             
+0076 E9               87             MOV     A,R1
+                      88             
+                      89             
+0077 540F             90             ANL     A,#00001111B
+                      91             
+0079 FA               92             MOV     R2,A
+                      93             
+007A C3               94             CLR     C
+007B 940A             95             SUBB    A,#10
+                      96             
+007D 500E             97             JNC     BCD_BIG
+                      98             
+                      99             
+007F E9              100             MOV     A,R1
+0080 C4              101             SWAP    A
+                     102             
+0081 540F            103             ANL     A,#00001111B
+                     104             
+0083 FB              105             MOV     R3,A
+                     106             
+0084 C3              107             CLR     C
+0085 940A            108             SUBB    A,#10
+                     109             
+0087 5004            110             JNC     BCD_BIG
+                     111             
+0089 E4              112             CLR     A
+                     113             
+                     114     
+                     115     
+                     116     
+                     117     
+                     118     
+                     119     
+                     120     
+                     121     
+                     122     
+                     123     
+A51 MACRO ASSEMBLER  STARTUP                                                              10/28/2021 22:04:15 PAGE     3
+
+                     124     
+                     125     
+                     126     
+                     127     
+                     128     
+                     129             
+008A 020090          130             LJMP    CONVERT_OK
+                     131     
+008D                 132     BCD_BIG:
+008D 759000          133             MOV     P1,#00H
+                     134     
+0090                 135     CONVERT_OK:
+0090 22              136             RET
+                     137             
+0091                 138     S_CONVERT_BIN_BCD:
+0091 75F010          139             MOV     B,#10H
+0094 E8              140             MOV     A,R0
+                     141             
+0095 84              142             DIV     AB
+                     143             
+0096 C4              144             SWAP    A
+                     145             
+0097 54F0            146             ANL     A,#11110000B
+0099 53F00F          147             ANL     B,#00001111B
+009C 45F0            148             ORL     A,B
+                     149             
+009E FC              150             MOV     R4,A
+                     151     
+009F 22              152             RET
+                     153             
+                     154             
+                     155             END
+A51 MACRO ASSEMBLER  STARTUP                                                              10/28/2021 22:04:15 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                   T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . . . . .  D ADDR   00F0H   A   
+BCD_BIG. . . . . . . . .  C ADDR   008DH   A   
+CONVERT_BCD. . . . . . .  C ADDR   0074H   A   
+CONVERT_OK . . . . . . .  C ADDR   0090H   A   
+EA . . . . . . . . . . .  B ADDR   00A8H.7 A   
+END_OF_PROGRAM . . . . .  C ADDR   0048H   A   
+ET0. . . . . . . . . . .  B ADDR   00A8H.1 A   
+ISR_TIMER0_OVERFLOW. . .  C ADDR   004BH   A   
+ISR_TIMER0_OVERFLOW_END.  C ADDR   0060H   A   
+ISR_TIMER0_OVERFLOW_END2  C ADDR   005EH   A   
+MAIN_LOOP. . . . . . . .  C ADDR   0039H   A   
+P0 . . . . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . . . . .  D ADDR   00A0H   A   
+S_CONVERT_BIN_BCD. . . .  C ADDR   0091H   A   
+S_INIT_INTERUP . . . . .  C ADDR   0061H   A   
+S_INIT_TIMER0_200U . . .  C ADDR   0066H   A   
+TH0. . . . . . . . . . .  D ADDR   008CH   A   
+TIMER_RUN. . . . . . . .  C ADDR   0045H   A   
+TMOD . . . . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . . . . .  B ADDR   0088H.4 A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

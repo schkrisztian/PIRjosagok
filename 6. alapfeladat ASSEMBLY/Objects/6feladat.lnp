@@ -1,0 +1,3 @@
+".\Objects\STARTUP.obj" 
+TO ".\Objects\6feladat" 
+PRINT(".\Listings\6feladat.m51")

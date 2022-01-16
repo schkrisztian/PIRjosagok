@@ -1,0 +1,79 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    10/26/2021  20:23:42  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\PIR\KEIL_V5\C51\BIN\BL51.EXE .\Objects\STARTUP.obj TO .\Objects\4feladat PRINT (.\Listings\4feladat.m51)
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\STARTUP.obj (STARTUP)
+
+
+LINK MAP OF MODULE:  .\Objects\4feladat (STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     002DH                  *** GAP ***
+            CODE    0030H     0031H     ABSOLUTE     
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\4feladat (STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        STARTUP
+  C:0039H         SYMBOL        CHECK_BUTTON
+  B:00A8H.7       SYMBOL        EA
+  C:0042H         SYMBOL        END_OF_PROGRAM
+  B:00A8H.1       SYMBOL        ET0
+  C:0045H         SYMBOL        ISR_TIMER0_OVERFLOW
+  C:004DH         SYMBOL        ISR_TIMER0_OVERFLOW_END
+  D:0080H         SYMBOL        P0
+  D:0090H         SYMBOL        P1
+  C:004EH         SYMBOL        S_ENABLE_INTERUP
+  C:0053H         SYMBOL        S_INIT_TIMER0_200U
+  D:008CH         SYMBOL        TH0
+  D:0089H         SYMBOL        TMOD
+  C:0000H         LINE#         25
+  C:0030H         LINE#         32
+  C:0033H         LINE#         33
+  C:0036H         LINE#         35
+  C:0039H         LINE#         40
+  C:003BH         LINE#         41
+  C:003DH         LINE#         43
+  C:003FH         LINE#         45
+  C:0042H         LINE#         49
+  C:0045H         LINE#         52
+  C:0047H         LINE#         53
+  C:0049H         LINE#         54
+  C:004BH         LINE#         55
+  C:004DH         LINE#         60
+  C:004EH         LINE#         64
+  C:0050H         LINE#         65
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  10/26/2021  20:23:42  PAGE 2
+
+
+  C:0052H         LINE#         67
+  C:0053H         LINE#         70
+  C:0056H         LINE#         71
+  C:0059H         LINE#         73
+  C:005CH         LINE#         75
+  C:005EH         LINE#         76
+  C:0060H         LINE#         79
+  -------         ENDMOD        STARTUP
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0034H BYTE ( 2%) *
+******************************************************************************
+
+Program Size: data=8.0 xdata=0 code=52
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

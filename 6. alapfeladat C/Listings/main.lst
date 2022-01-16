@@ -1,0 +1,147 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              11/10/2021 13:50:44 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\PIR\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\
+                    -main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          /* --- DEKLARÁCIÓK --- */
+   4          sbit gep1 = P1^0;
+   5          sbit gep2 = P1^1;
+   6          sbit gep3 = P1^2;
+   7          sbit checkback = P1^7;
+   8          
+   9          sbit lamp1 = P0^0;
+  10          sbit lamp2 = P0^1;
+  11          sbit lamp3 = P0^2;
+  12          
+  13          unsigned int timerCounter = 0;
+  14          char timeoutCount = 0;
+  15          char countLamp3=0;
+  16          
+  17          
+  18          /* --- FÜGGVÉNYEK --- */
+  19          void initTimer0(void);
+  20          void initInterrupt(void);
+  21          void resetTimer0(void);
+  22          
+  23          void main (void){
+  24   1        P1=00;
+  25   1        P0=00;
+  26   1        
+  27   1        initTimer0();
+  28   1        initInterrupt();
+  29   1        
+  30   1        
+  31   1        while(1){
+  32   2        
+  33   2          if( checkback ){
+  34   3            lamp2=0;
+  35   3            
+  36   3            if( countLamp3 > 4 ){
+  37   4              lamp3=0;
+  38   4              countLamp3=0;
+  39   4            }
+  40   3            
+  41   3            checkback = 0;
+  42   3          }
+  43   2          
+  44   2        
+  45   2          if( (gep1&gep3) | (gep1&gep2) | (gep2&gep3) ){
+  46   3            
+  47   3            TR0 = 1;
+  48   3            
+  49   3            
+  50   3          } else {
+  51   3            
+  52   3            resetTImer0();
+*** WARNING C206 IN LINE 52 OF main.c: 'resetTImer0': missing function-prototype
+  53   3            lamp1=0;
+C51 COMPILER V9.60.0.0   MAIN                                                              11/10/2021 13:50:44 PAGE 2   
+
+  54   3            
+  55   3          } //endif
+  56   2        
+  57   2        
+  58   2        }
+  59   1        
+  60   1      
+  61   1      }
+  62          
+  63          void isrTimer0(void) interrupt 1{
+  64   1        
+  65   1        if( timerCounter ){
+  66   2        
+  67   2          timerCounter--;
+  68   2        
+  69   2        }else{
+  70   2          timeoutCount++;
+  71   2          
+  72   2          if( timeoutCount ){
+  73   3            lamp1=1;
+  74   3            timerCounter = 25000;
+  75   3            if( timeoutCount > 1 ){
+  76   4              lamp2=1;
+  77   4              resetTimer0();
+  78   4            }
+  79   3            
+  80   3            
+  81   3            if( countLamp3 == 5){
+  82   4              lamp3 = 1;
+  83   4            } else if( countLamp3 < 5 ){
+  84   4              countLamp3++;
+  85   4            }
+  86   3            
+  87   3            
+  88   3          }
+  89   2          
+  90   2          
+  91   2        }
+  92   1      
+  93   1      }
+  94          
+  95          void initTimer0(void){
+  96   1        
+  97   1        TMOD = 2;
+  98   1        
+  99   1        TH0 = 56;
+ 100   1        TL0 = 0;
+ 101   1        
+ 102   1        timerCounter = 25000;
+ 103   1        
+ 104   1      }
+ 105          
+ 106          void initInterrupt(void){
+ 107   1        EA = 1;
+ 108   1        ET0 = 1;
+ 109   1      }
+ 110          
+ 111          void resetTimer0(void){
+ 112   1        TR0=0;
+ 113   1        TL0=0;
+ 114   1        timerCounter = 25000;
+ 115   1        
+C51 COMPILER V9.60.0.0   MAIN                                                              11/10/2021 13:50:44 PAGE 3   
+
+ 116   1      }
+ 117          
+ 118          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    244    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

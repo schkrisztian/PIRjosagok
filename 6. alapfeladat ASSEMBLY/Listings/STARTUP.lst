@@ -1,0 +1,201 @@
+A51 MACRO ASSEMBLER  STARTUP                                                              11/03/2021 12:01:40 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\STARTUP.obj
+ASSEMBLER INVOKED BY: C:\PIR\Keil_v5\C51\BIN\A51.EXE STARTUP.A51 SET(SMALL) DEBUG PRINT(.\Listings\STARTUP.lst) OBJECT(.
+                      \Objects\STARTUP.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+----                   1             CSEG    AT      0000H
+0000 020030            2             LJMP    0030H
+----                   3             CSEG    AT      000BH
+000B 020076            4             LJMP    ISR_TIMER0_OVERFLOW
+                       5             
+----                   6             CSEG    AT      0030H
+                       7             
+                       8             
+0030 120098            9             LCALL   S_INIT_INTERUPT
+0033 12009D           10             LCALL   S_INIT_TIMER0
+                      11             
+0036 7800             12             MOV     R0,#00H
+0038 7900             13             MOV     R1,#00H
+                      14             
+003A 759000           15             MOV     P1,#00H
+003D 758000           16             MOV     P0,#00H
+                      17             
+0040                  18     WATCH_INPUT:
+                      19             
+0040 E590             20             MOV     A,P1
+0042 5480             21             ANL     A,#10000000B
+0044 C297             22             CLR     P1.7
+                      23             
+0046 6003             24             JZ      NO_CHECKBACK
+                      25             
+0048 1200BA           26             LCALL   S_CHECKBACK     
+004B                  27     NO_CHECKBACK:      
+004B E4               28             CLR     A
+                      29             
+                      30             
+004C E590             31             MOV     A,P1
+004E 5407             32             ANL     A,#07H
+                      33             
+                      34             
+                      35     
+                      36     
+                      37     
+                      38     
+                      39             
+0050 A2E0             40             MOV     C,ACC.0
+0052 82E2             41             ANL     C,ACC.2
+0054 92E4             42             MOV     ACC.4,C
+                      43             
+0056 A2E0             44             MOV     C,ACC.0
+0058 82E1             45             ANL     C,ACC.1
+005A 92E5             46             MOV     ACC.5,C
+                      47             
+005C A2E1             48             MOV     C,ACC.1
+005E 82E2             49             ANL     C,ACC.2
+                      50             
+0060 72E4             51             ORL     C,ACC.4
+0062 72E5             52             ORL     C,ACC.5
+                      53             
+0064 E4               54             CLR     A
+0065 33               55             RLC     A
+                      56             
+                      57             
+A51 MACRO ASSEMBLER  STARTUP                                                              11/03/2021 12:01:40 PAGE     2
+
+0066 7006             58             JNZ     LOGICAL_A_NOT_NULL
+0068 1200AA           59             LCALL   S_RESET_TIMER0
+006B 020040           60             LJMP    WATCH_INPUT
+                      61             
+006E                  62     LOGICAL_A_NOT_NULL:
+006E D28C             63             SETB    TR0
+                      64             
+                      65             
+0070 020040           66             LJMP    WATCH_INPUT
+                      67             
+                      68             
+0073                  69     END_OF_PROGRAM:
+0073 020073           70             LJMP    END_OF_PROGRAM
+                      71             
+0076                  72     ISR_TIMER0_OVERFLOW:
+                      73             
+0076 DD1F             74             DJNZ    R5,ISR_TIMER0_OVERFLOW_END
+0078 7DFA             75             MOV     R5,#0FAH
+007A DE1B             76             DJNZ    R6,ISR_TIMER0_OVERFLOW_END
+007C 7E14             77             MOV     R6,#20
+007E DF17             78             DJNZ    R7,ISR_TIMER0_OVERFLOW_END
+0080 7F05             79             MOV     R7,#5
+                      80             
+0082 B8000C           81             CJNE    R0,#0,INTERUPT_10SEC
+0085 08               82             INC     R0
+0086 D280             83             SETB    P0.0
+                      84             
+0088 09               85             INC     R1
+0089 B90502           86             CJNE    R1,#5,COUNT_NOT_OVER
+008C D282             87             SETB    P0.2
+                      88             
+008E                  89     COUNT_NOT_OVER:
+008E 020097           90             LJMP    ISR_TIMER0_OVERFLOW_END
+                      91     
+0091                  92     INTERUPT_10SEC:       
+0091 D281             93             SETB    P0.1
+0093 7800             94             MOV     R0,#00H
+0095 C28C             95             CLR     TR0
+                      96     
+0097                  97     ISR_TIMER0_OVERFLOW_END:
+0097 32               98             RETI
+                      99             
+                     100             
+                     101             
+0098                 102     S_INIT_INTERUPT:
+                     103             
+                     104     
+                     105     
+0098 D2AF            106             SETB    EA
+009A D2A9            107             SETB    ET0
+                     108             
+009C 22              109             RET
+                     110             
+009D                 111     S_INIT_TIMER0:
+                     112             
+009D 758902          113             MOV     TMOD,#02H
+00A0 758C38          114             MOV     TH0,#38H
+                     115             
+00A3 7DFA            116             MOV     R5,#0FAH
+00A5 7E14            117             MOV     R6,#20
+00A7 7F05            118             MOV     R7,#05H
+                     119     
+00A9 22              120             RET
+                     121             
+00AA                 122     S_RESET_TIMER0:
+                     123             ;TIMER0 RESET
+A51 MACRO ASSEMBLER  STARTUP                                                              11/03/2021 12:01:40 PAGE     3
+
+00AA C28C            124             CLR     TR0
+00AC 758A00          125             MOV     TL0,#00H
+                     126             
+                     127             
+00AF 7DFA            128             MOV     R5,#0FAH
+00B1 7E14            129             MOV     R6,#20
+00B3 7F05            130             MOV     R7,#5
+                     131             
+                     132             
+00B5 C280            133             CLR     P0.0
+00B7 7800            134             MOV     R0,#00H
+                     135     
+00B9 22              136             RET
+                     137             
+00BA                 138     S_CHECKBACK:
+00BA C281            139             CLR     P0.1
+                     140             
+00BC 308204          141             JNB      P0.2,COUNTER_NOT_FULL
+00BF 7900            142             MOV     R1,#0
+00C1 C282            143             CLR     P0.2
+                     144     
+00C3                 145     COUNTER_NOT_FULL:
+                     146     
+00C3 22              147             RET
+                     148             
+                     149     
+                     150             
+                     151             END
+A51 MACRO ASSEMBLER  STARTUP                                                              11/03/2021 12:01:40 PAGE     4
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                  T Y P E  V A L U E   ATTRIBUTES
+
+ACC . . . . . . . . . .  D ADDR   00E0H   A   
+COUNTER_NOT_FULL. . . .  C ADDR   00C3H   A   
+COUNT_NOT_OVER. . . . .  C ADDR   008EH   A   
+EA. . . . . . . . . . .  B ADDR   00A8H.7 A   
+END_OF_PROGRAM. . . . .  C ADDR   0073H   A   
+ET0 . . . . . . . . . .  B ADDR   00A8H.1 A   
+INTERUPT_10SEC. . . . .  C ADDR   0091H   A   
+ISR_TIMER0_OVERFLOW . .  C ADDR   0076H   A   
+ISR_TIMER0_OVERFLOW_END  C ADDR   0097H   A   
+LOGICAL_A_NOT_NULL. . .  C ADDR   006EH   A   
+NO_CHECKBACK. . . . . .  C ADDR   004BH   A   
+P0. . . . . . . . . . .  D ADDR   0080H   A   
+P1. . . . . . . . . . .  D ADDR   0090H   A   
+S_CHECKBACK . . . . . .  C ADDR   00BAH   A   
+S_INIT_INTERUPT . . . .  C ADDR   0098H   A   
+S_INIT_TIMER0 . . . . .  C ADDR   009DH   A   
+S_RESET_TIMER0. . . . .  C ADDR   00AAH   A   
+TH0 . . . . . . . . . .  D ADDR   008CH   A   
+TL0 . . . . . . . . . .  D ADDR   008AH   A   
+TMOD. . . . . . . . . .  D ADDR   0089H   A   
+TR0 . . . . . . . . . .  B ADDR   0088H.4 A   
+WATCH_INPUT . . . . . .  C ADDR   0040H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)

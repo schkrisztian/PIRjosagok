@@ -1,0 +1,3 @@
+".\Objects\main.obj" 
+TO ".\Objects\3feladat" 
+PRINT(".\Listings\3feladat.m51")

@@ -1,0 +1,102 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              11/07/2021 23:26:03 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\PIR\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\
+                    -main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          
+   3          sbit em1 = P1^0;
+   4          sbit em2 = P1^1;
+   5          sbit em3 = P1^2;
+   6          sbit em4 = P1^3;
+   7          
+   8          bit kapcs = 0;
+   9          
+  10          unsigned int timerCounter = 0;
+  11          
+  12          void initInterrupt(void);
+  13          void initTimer0(void);
+  14          void lampOff(void);
+  15          
+  16          void main(void){
+  17   1        
+  18   1        P0=0;
+  19   1        P1=0;
+  20   1        
+  21   1        
+  22   1        initInterrupt();
+  23   1        initTimer0();
+  24   1        
+  25   1        while(1){
+  26   2          if( em1 || em2 || em3 || em4 ){
+  27   3            P1=0;
+  28   3            
+  29   3            if( !kapcs ){
+  30   4              P0=0x0f;
+  31   4              TR0 = 1;
+  32   4              kapcs=1;
+  33   4              
+  34   4            }else{
+  35   4              lampOff();
+  36   4            }
+  37   3            
+  38   3          }  
+  39   2        }
+  40   1      
+  41   1      }
+  42          
+  43          
+  44          void initInterrupt(void){
+  45   1        ET0 = 1;
+  46   1        EA = 1;
+  47   1      }
+  48          
+  49          void initTimer0(void){
+  50   1        TMOD &= 0x0f;
+  51   1        TMOD |= 0x02;
+  52   1        
+  53   1        TH0 = 6;
+  54   1        TL0 = 0;
+C51 COMPILER V9.60.0.0   MAIN                                                              11/07/2021 23:26:03 PAGE 2   
+
+  55   1        
+  56   1        timerCounter = 60000;
+  57   1        
+  58   1      }
+  59          
+  60          void lampOff(void){
+  61   1        P0=00;
+  62   1        TR0=0;
+  63   1        timerCounter = 60000;
+  64   1        TL0=0;
+  65   1        kapcs=0;
+  66   1      }
+  67          
+  68          void isrTimer0(void) interrupt 1{
+  69   1        
+  70   1         if( timerCounter != 0 ){
+  71   2          timerCounter--;
+  72   2         }else{
+  73   2          lampOff();
+  74   2         }
+  75   1      
+  76   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    107    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
